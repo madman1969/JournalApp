@@ -17,15 +17,13 @@ namespace JournalApp
       try
       {
         JournalEntry tmp = new JournalEntry();
+        JournalItem current;
 
-        Microsoft.Office.Interop.Outlook.JournalItem current;
-
-        // Create the Outlook application.
-        // in-line initialization
-        Microsoft.Office.Interop.Outlook.Application oApp = new Microsoft.Office.Interop.Outlook.Application();
+        // Create the Outlook application in-line initialization
+        Application oApp = new Application();
 
         // Get the MAPI namespace.
-        Microsoft.Office.Interop.Outlook.NameSpace oNS = oApp.GetNamespace("mapi");
+        NameSpace oNS = oApp.GetNamespace("mapi");
 
         // Log on by using the default profile or existing session (no dialog box).
         oNS.Logon(Missing.Value, Missing.Value, false, true);
@@ -37,23 +35,26 @@ namespace JournalApp
 
         Console.WriteLine($"Found {journalFolder.Items.Count} journal entries");
 
+
+        // Generate list of JournalEntry instances ...
         foreach (var entry in journalItems)
         {
-          current = (Microsoft.Office.Interop.Outlook.JournalItem)entry;
-          Console.WriteLine($"\tJournal Subject: [{current.Subject}] [Journey Type: {current.Type}] [{current.Attachments.Count} Attachments] [Creation Date: {current.CreationTime.ToString()}]");
+          current = (JournalItem)entry;
+          // Console.WriteLine($"Journal Subject: [{current.Subject}] [Journey Type: {current.Type}] [{current.Attachments.Count} Attachments] [Creation Date: {current.CreationTime.ToString()}]");
 
           if (current.Attachments.Count > 0)
           {
-            var attachmentsList = (Microsoft.Office.Interop.Outlook.Attachments)current.Attachments;
+            var attachmentsList = (Attachments)current.Attachments;
 
-            foreach (Attachment attachment in attachmentsList)
-            {
-              Console.WriteLine($"\t[{attachment.Type.ToString()}] [{attachment.DisplayName}]");
-            }
+            //foreach (Attachment attachment in attachmentsList)
+            //{
+            //  Console.WriteLine($"\t[{attachment.Type.ToString()}] [{attachment.DisplayName}]");
+            //}
           }
 
           entryList.Add(new JournalEntry
           {
+            ConversationID = current.ConversationID,
             Subject = current.Subject,
             EntryType = current.Type,
             StartTime = current.CreationTime,
@@ -67,15 +68,7 @@ namespace JournalApp
         Console.WriteLine("Logged out of Outlook");
 
         // Write journal list out as JSON ...
-        string json = JsonConvert.SerializeObject(entryList, Newtonsoft.Json.Formatting.Indented);
-        var output = Path.Combine(GetExecutingDirectoryName(), jsonFile);
-
-        Console.WriteLine($"JSON File Path: [{output}]");
-
-        if (File.Exists(output))
-          File.Delete(output);
-
-        File.WriteAllText(output, json);
+        WriteJSONFile(jsonFile, entryList);
 
       }
       //Error handler.
@@ -85,6 +78,28 @@ namespace JournalApp
       }
     }
 
+    /// <summary>
+    /// Writes the list of journal entries to file as JSON
+    /// </summary>
+    /// <param name="jsonFile"></param>
+    /// <param name="entryList"></param>
+    private static void WriteJSONFile(string jsonFile, List<JournalEntry> entryList)
+    {
+      string json = JsonConvert.SerializeObject(entryList, Formatting.Indented);
+      var output = Path.Combine(GetExecutingDirectoryName(), jsonFile);
+
+      Console.WriteLine($"JSON File Path: [{output}]");
+
+      if (File.Exists(output))
+        File.Delete(output);
+
+      File.WriteAllText(output, json);
+    }
+
+    /// <summary>
+    /// Retrieve directory path of the executing application
+    /// </summary>
+    /// <returns></returns>
     public static string GetExecutingDirectoryName()
     {
       var location = new Uri(Assembly.GetEntryAssembly().GetName().CodeBase);
