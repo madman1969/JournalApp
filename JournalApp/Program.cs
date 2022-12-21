@@ -1,5 +1,6 @@
 ﻿using Microsoft.Office.Interop.Outlook;
 using Newtonsoft.Json;
+using ShellProgressBar;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,6 +14,7 @@ namespace JournalApp
     {
       const string jsonFile = "journal.json";
       List<JournalEntry> entryList = new List<JournalEntry>();
+      int totalTicks;
 
       try
       {
@@ -33,33 +35,48 @@ namespace JournalApp
         var journalItems = journalFolder.Items;
         journalItems.Sort("[CreationTime]", true);
 
-        Console.WriteLine($"Found {journalFolder.Items.Count} journal entries");
+        totalTicks = journalFolder.Items.Count;
+        //Console.WriteLine($"Found {totalTicks} journal entries");
+        //Console.WriteLine();
 
-
-        // Generate list of JournalEntry instances ...
-        foreach (var entry in journalItems)
+        var options = new ProgressBarOptions
         {
-          current = (JournalItem)entry;
-          // Console.WriteLine($"Journal Subject: [{current.Subject}] [Journey Type: {current.Type}] [{current.Attachments.Count} Attachments] [Creation Date: {current.CreationTime.ToString()}]");
+          ForegroundColor = ConsoleColor.Green,
+          ForegroundColorDone = ConsoleColor.DarkGreen,
+          BackgroundColor = ConsoleColor.DarkGray,
+          BackgroundCharacter = '\u2593',
+          // ProgressCharacter = '-',
+        };
 
-          if (current.Attachments.Count > 0)
+        using (var pbar = new ProgressBar(totalTicks, $"Processing {totalTicks} journal entries", options))
+        {
+          // Generate list of JournalEntry instances ...
+          foreach (var entry in journalItems)
           {
-            var attachmentsList = (Attachments)current.Attachments;
+            current = (JournalItem)entry;
+            // Console.WriteLine($"Journal Subject: [{current.Subject}] [Journey Type: {current.Type}] [{current.Attachments.Count} Attachments] [Creation Date: {current.CreationTime.ToString()}]");
 
-            //foreach (Attachment attachment in attachmentsList)
-            //{
-            //  Console.WriteLine($"\t[{attachment.Type.ToString()}] [{attachment.DisplayName}]");
-            //}
+            if (current.Attachments.Count > 0)
+            {
+              var attachmentsList = (Attachments)current.Attachments;
+
+              //foreach (Attachment attachment in attachmentsList)
+              //{
+              //  Console.WriteLine($"\t[{attachment.Type.ToString()}] [{attachment.DisplayName}]");
+              //}
+            }
+
+            entryList.Add(new JournalEntry
+            {
+              ConversationID = current.ConversationID,
+              Subject = current.Subject,
+              EntryType = current.Type,
+              StartTime = current.CreationTime,
+              Body = current.Body
+            });
+
+            pbar.Tick();
           }
-
-          entryList.Add(new JournalEntry
-          {
-            ConversationID = current.ConversationID,
-            Subject = current.Subject,
-            EntryType = current.Type,
-            StartTime = current.CreationTime,
-            Body = current.Body
-          });
         }
 
         //Log off.
@@ -88,12 +105,27 @@ namespace JournalApp
       string json = JsonConvert.SerializeObject(entryList, Formatting.Indented);
       var output = Path.Combine(GetExecutingDirectoryName(), jsonFile);
 
-      Console.WriteLine($"JSON File Path: [{output}]");
-
       if (File.Exists(output))
         File.Delete(output);
 
       File.WriteAllText(output, json);
+
+      var fileSize = GetFileSize(output) / 1024;
+      Console.WriteLine($"JSON File Path: [{output}], Size: [{fileSize}KB]");
+    }
+
+    /// <summary>
+    /// Retrieve the size in bytes of the specified file
+    /// </summary>
+    /// <param name="FilePath"></param>
+    /// <returns></returns>
+    static long GetFileSize(string FilePath)
+    {
+      if (File.Exists(FilePath))
+      {
+        return new FileInfo(FilePath).Length;
+      }
+      return 0;
     }
 
     /// <summary>
