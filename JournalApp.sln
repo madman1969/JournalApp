@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JournalApp.DataModel", "Jou
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JournalApp.CmdLine", "JournalApp.Console\JournalApp.CmdLine.csproj", "{9484FB7B-DFF9-41C4-A88B-18489B13FB3B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JournalApp.PDF", "JournalApp.PDF\JournalApp.PDF.csproj", "{3B034B64-08DC-4CE4-8B58-AE934CEC9040}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JournalApp.ParserTests", "JournalApp.ParserTests\JournalApp.ParserTests.csproj", "{479B9126-D6D7-4310-BE6E-F629703EA9FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{9484FB7B-DFF9-41C4-A88B-18489B13FB3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9484FB7B-DFF9-41C4-A88B-18489B13FB3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9484FB7B-DFF9-41C4-A88B-18489B13FB3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B034B64-08DC-4CE4-8B58-AE934CEC9040}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B034B64-08DC-4CE4-8B58-AE934CEC9040}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B034B64-08DC-4CE4-8B58-AE934CEC9040}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B034B64-08DC-4CE4-8B58-AE934CEC9040}.Release|Any CPU.Build.0 = Release|Any CPU
+		{479B9126-D6D7-4310-BE6E-F629703EA9FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{479B9126-D6D7-4310-BE6E-F629703EA9FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{479B9126-D6D7-4310-BE6E-F629703EA9FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{479B9126-D6D7-4310-BE6E-F629703EA9FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

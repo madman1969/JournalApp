@@ -11,8 +11,8 @@ namespace JournalApp.CmdLine
       const string jsonFile = "journal.json";
       List<JournalEntry> entryList = new List<JournalEntry>();
 
-      entryList = JournalApp.Parser.Parser.RetrieveJournalEntriesFromOutlook(jsonFile);
-      // entryList = JournalApp.Parser.Parser.RetrieveJournalEntriesFromJSONFile(jsonFile);
+      // entryList = JournalApp.Parser.Parser.RetrieveJournalEntriesFromOutlook(jsonFile);
+      entryList = JournalApp.Parser.Parser.RetrieveJournalEntriesFromJSONFile(jsonFile);
 
       Console.WriteLine();
     }
