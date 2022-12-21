@@ -1,4 +1,5 @@
-﻿using Microsoft.Office.Interop.Outlook;
+﻿using JournalApp.DataModel;
+using Microsoft.Office.Interop.Outlook;
 using Newtonsoft.Json;
 using ShellProgressBar;
 using System;
@@ -6,15 +7,19 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
-namespace JournalApp
+namespace JournalApp.Parser
 {
-  internal class Program
+  public class Parser
   {
-    static void Main(string[] args)
+    /// <summary>
+    /// Retrieves list of JournalEntries from Outlook
+    /// </summary>
+    /// <param name="jsonFile"></param>
+    /// <returns></returns>
+    public static List<JournalEntry> RetrieveJournalEntriesFromOutlook(string jsonFile = "")
     {
-      const string jsonFile = "journal.json";
-      List<JournalEntry> entryList = new List<JournalEntry>();
       int totalTicks;
+      List<JournalEntry> entryList = new List<JournalEntry>();
 
       try
       {
@@ -84,15 +89,40 @@ namespace JournalApp
 
         Console.WriteLine("Logged out of Outlook");
 
-        // Write journal list out as JSON ...
-        WriteJSONFile(jsonFile, entryList);
-
+        // Write journal list out as JSON if required ...
+        if (jsonFile != "")
+          WriteJSONFile(jsonFile, entryList);
       }
       //Error handler.
       catch (System.Exception e)
       {
         Console.WriteLine("{0} Exception caught: ", e);
       }
+
+      return entryList;
+    }
+
+    /// <summary>
+    /// Retrieves list of JournalEntries deserialised from JSON file ...
+    /// </summary>
+    /// <param name="jsonFile"></param>
+    /// <returns></returns>
+    public static List<JournalEntry> RetrieveJournalEntriesFromJSONFile(string jsonFile)
+    {
+      List<JournalEntry> list = new List<JournalEntry>();
+
+      var input = Path.Combine(GetExecutingDirectoryName(), jsonFile);
+
+      if (File.Exists(input))
+      {
+        var text = File.ReadAllText(input);
+
+        list = JsonConvert.DeserializeObject<List<JournalEntry>>(text);
+      }
+
+      Console.WriteLine($"Read {list.Count} journal entries from JSON file");
+
+      return list;
     }
 
     /// <summary>
@@ -100,7 +130,7 @@ namespace JournalApp
     /// </summary>
     /// <param name="jsonFile"></param>
     /// <param name="entryList"></param>
-    private static void WriteJSONFile(string jsonFile, List<JournalEntry> entryList)
+    public static void WriteJSONFile(string jsonFile, List<JournalEntry> entryList)
     {
       string json = JsonConvert.SerializeObject(entryList, Formatting.Indented);
       var output = Path.Combine(GetExecutingDirectoryName(), jsonFile);
@@ -119,7 +149,7 @@ namespace JournalApp
     /// </summary>
     /// <param name="FilePath"></param>
     /// <returns></returns>
-    static long GetFileSize(string FilePath)
+    private static long GetFileSize(string FilePath)
     {
       if (File.Exists(FilePath))
       {
