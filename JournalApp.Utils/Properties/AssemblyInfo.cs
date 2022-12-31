@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("JournalApp")]
+[assembly: AssemblyTitle("JournalApp.Utils")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("JournalApp")]
+[assembly: AssemblyProduct("JournalApp.Utils")]
 [assembly: AssemblyCopyright("Copyright ©  2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("f0226faa-92e0-4ea9-8a5c-15e8b741badd")]
+[assembly: Guid("b861b952-211a-4bfe-b7c3-1414974a1979")]
 
 // Version information for an assembly consists of the following four values:
 //

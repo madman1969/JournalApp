@@ -77,6 +77,10 @@
       <Project>{DB8F611A-A336-4EE1-AF5B-164CFD9187A3}</Project>
       <Name>JournalApp.DataModel</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JournalApp.Utils\JournalApp.Utils.csproj">
+      <Project>{b861b952-211a-4bfe-b7c3-1414974a1979}</Project>
+      <Name>JournalApp.Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -2,13 +2,13 @@
 
 namespace JournalApp.Parser.Tests
 {
-  [TestClass()]
-  public class ParserTests
-  {
-    [TestMethod()]
-    public void RetrieveJournalEntriesFromJSONFileTest()
+    [TestClass()]
+    public class ParserTests
     {
-      Assert.Fail();
+        [TestMethod()]
+        public void RetrieveJournalEntriesFromJSONFileTest()
+        {
+            Assert.Fail();
+        }
     }
-  }
 }
